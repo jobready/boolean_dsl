@@ -1,15 +1,3 @@
-=begin
-
-literal = [A-z0-9_]+
-attribute_name = {literal}
-method_name = {attribute_name}[?]?
-expression_element = {literal}|{attribute_name}|{method_name}
-comparison_operator = =|<|<=|>|>=|!=
-expression_sub = {method_name}|{expression_element}{comparison_operator}{expression_element}
-boolean_operator = and|or
-expression = {expression_sub}|({expression_sub}){boolean_operator}{expression}
-
-=end
 class BooleanDsl::Parser < Parslet::Parser
   # Spaces
   rule(:space) { match('\s').repeat(1) }
@@ -21,20 +9,29 @@ class BooleanDsl::Parser < Parslet::Parser
   rule(:string_content) { (str("'").absent? >> any).repeat }
   rule(:string) { str("'") >> string_content.as(:string) >> str("'") >> space? }
 
-  rule(:attribute) { match('[A-Za-z_]').repeat.as(:attribute) }
+  rule(:attribute) { (match('[A-Za-z_]') >> match('[A-Za-z_0-9]').repeat).as(:attribute) }
 
   # Elements
   rule(:element) { integer | string | attribute }
+
+  # Booleans are rules that will evaluate to a true or false result
+  rule(:boolean) { value_comparison | attribute }
+  rule(:boolean_sub) { parens | boolean }
 
   # Operators (Comparison)
   rule(:comparison_operator) do
     (str('==') | str('!=') | str('<') | str('<=') | str('>') | str('>=')).as(:comparison_operator) >> space?
   end
-  rule(:comparison) { element.as(:left) >> comparison_operator >> element.as(:right) >> space? }
+  rule(:value_comparison) { element.as(:left) >> comparison_operator >> element.as(:right) >> space? }
+
+  # Operators (Boolean)
+  rule(:boolean_operator) { (str('&&') | str('||')).as(:boolean_operator) >> space? }
+  rule(:boolean_comparison) { boolean_sub.as(:left) >> boolean_operator >> expression.as(:right) >> space? }
+
+  rule(:parens) { str('(') >> expression.maybe.as(:expression) >> space? >> str(')') >> space? }
 
 
-
-  rule(:expression) { comparison | element }
+  rule(:expression) { boolean_comparison | parens | value_comparison | element }
 
   root(:expression)
 end

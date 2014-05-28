@@ -21,6 +21,23 @@ describe BooleanDsl::Parser do
 
   context 'attributes' do
     specify { expect(parser.parse("first_name")).to eq(attribute: 'first_name') }
+    specify { expect(parser.parse("aqf3_cert")).to eq(attribute: 'aqf3_cert') }
+    specify { expect(parser.parse("cert_3")).to eq(attribute: 'cert_3') }
+  end
+
+  context 'parens' do
+    specify { expect(parser.parse('(1)')).to eq(expression: { integer: "1" }) }
+    specify { expect(parser.parse("('alpha')")).to eq(expression: { string: "alpha" }) }
+    specify { expect(parser.parse("(aqf_cert)")).to eq(expression: { attribute: "aqf_cert" }) }
+    specify do
+      expect(parser.parse("(1 == 1)")).to eq(
+        expression: {
+          left: { integer: "1" },
+          comparison_operator: "==",
+          right: { integer: "1" }
+        }
+      )
+    end
   end
 
   context 'operators' do
@@ -57,13 +74,95 @@ describe BooleanDsl::Parser do
         )
       end
     end
-  end
-=begin
-  context 'combining expressions' do
-    specify do
-      expect(parser.parse('1 == 1 && 2 == 2')).to eq(
-        {})
+
+    context 'boolean' do
+      specify do
+        expect(parser.parse('1 == 1 && 2 == 2   ')).to eq(
+          left: {
+            left: { integer: "1" },
+            comparison_operator: "==",
+            right: { integer: "1" }
+          },
+          boolean_operator: "&&",
+          right: {
+            left: { integer: "2" },
+            comparison_operator: "==",
+            right: { integer: "2" }
+          }
+        )
+      end
+
+      specify do
+        expect(parser.parse('1 > 0 || alpha ')).to eq(
+          left: {
+            left: { integer: "1" },
+            comparison_operator: ">",
+            right: { integer: "0" }
+          },
+          boolean_operator: "||",
+          right: {
+            attribute: "alpha"
+          }
+        )
+      end
+
+      specify do
+        expect(parser.parse('1 < 2 && 6 == 2 && 8 > 3')).to eq(
+          left: {
+            left: { integer: "1" },
+            comparison_operator: "<",
+            right: { integer: "2" }
+          },
+          boolean_operator: "&&",
+          right: {
+            left: {
+              left: { integer: "6" },
+              comparison_operator: "==",
+              right: { integer: "2" }
+            },
+            boolean_operator: "&&",
+            right: {
+              left: { integer: "8" },
+              comparison_operator: ">",
+              right: { integer: "3" }
+            }
+          }
+        )
+      end
+
+      specify do
+        expect(parser.parse('(1 < 2 || 6 == 2) && 8 > 3')).to eq(
+          left: {
+            expression: {
+              left: {
+                left: { integer: "1" },
+                comparison_operator: "<",
+                right: { integer: "2" }
+              },
+              boolean_operator: "||",
+              right: {
+                left: { integer: "6" },
+                comparison_operator: "==",
+                right: { integer: "2" }
+              }
+            }
+          },
+          boolean_operator: "&&",
+          right: {
+            left: { integer: "8" },
+            comparison_operator: ">",
+            right: { integer: "3" }
+          }
+        )
+      end
     end
+  end
+
+=begin
+  context 'error cases' do
+    %w(
+      
+    )
   end
 =end
 end
