@@ -4,33 +4,33 @@ describe BooleanDsl::Parser do
   let(:parser) { described_class.new }
 
   context 'numeric literals' do
-    specify { expect(parser.parse('0')).to eq(integer: "0") }
-    specify { expect(parser.parse('1')).to eq(integer: "1") }
-    specify { expect(parser.parse('12')).to eq(integer: "12") }
-    specify { expect(parser.parse('0 ')).to eq(integer: "0") }
-    specify { expect(parser.parse('12   ')).to eq(integer: "12") }
+    specify { expect(parser.parse_with_debug('0')).to eq(integer: "0") }
+    specify { expect(parser.parse_with_debug('1')).to eq(integer: "1") }
+    specify { expect(parser.parse_with_debug('12')).to eq(integer: "12") }
+    specify { expect(parser.parse_with_debug('0 ')).to eq(integer: "0") }
+    specify { expect(parser.parse_with_debug('12   ')).to eq(integer: "12") }
   end
 
   context 'string literals' do
-    specify { expect(parser.parse("''")).to eq(string: []) } #TODO: https://github.com/kschiess/parslet/pull/98
-    specify { expect(parser.parse("' '")).to eq(string: ' ') }
-    specify { expect(parser.parse("'potato'")).to eq(string: 'potato') }
-    specify { expect(parser.parse("'I am, 12345, \"you\" are'")).to eq(string: 'I am, 12345, "you" are') }
-    specify { expect(parser.parse("'I am, 12345, \"you\" are'   ")).to eq(string: 'I am, 12345, "you" are') }
+    specify { expect(parser.parse_with_debug("''")).to eq(string: []) } #TODO: https://github.com/kschiess/parslet/pull/98
+    specify { expect(parser.parse_with_debug("' '")).to eq(string: ' ') }
+    specify { expect(parser.parse_with_debug("'potato'")).to eq(string: 'potato') }
+    specify { expect(parser.parse_with_debug("'I am, 12345, \"you\" are'")).to eq(string: 'I am, 12345, "you" are') }
+    specify { expect(parser.parse_with_debug("'I am, 12345, \"you\" are'   ")).to eq(string: 'I am, 12345, "you" are') }
   end
 
   context 'attributes' do
-    specify { expect(parser.parse("first_name")).to eq(attribute: 'first_name') }
-    specify { expect(parser.parse("aqf3_cert")).to eq(attribute: 'aqf3_cert') }
-    specify { expect(parser.parse("cert_3")).to eq(attribute: 'cert_3') }
+    specify { expect(parser.parse_with_debug("first_name")).to eq(attribute: 'first_name') }
+    specify { expect(parser.parse_with_debug("aqf3_cert")).to eq(attribute: 'aqf3_cert') }
+    specify { expect(parser.parse_with_debug("cert_3")).to eq(attribute: 'cert_3') }
   end
 
   context 'parens' do
-    specify { expect(parser.parse('(1)')).to eq(expression: { integer: "1" }) }
-    specify { expect(parser.parse("('alpha')")).to eq(expression: { string: "alpha" }) }
-    specify { expect(parser.parse("(aqf_cert)")).to eq(expression: { attribute: "aqf_cert" }) }
+    specify { expect(parser.parse_with_debug('(1)')).to eq(expression: { integer: "1" }) }
+    specify { expect(parser.parse_with_debug("('alpha')")).to eq(expression: { string: "alpha" }) }
+    specify { expect(parser.parse_with_debug("(aqf_cert)")).to eq(expression: { attribute: "aqf_cert" }) }
     specify do
-      expect(parser.parse("(1 == 1)")).to eq(
+      expect(parser.parse_with_debug("(1 == 1)")).to eq(
         expression: {
           left: { integer: "1" },
           comparison_operator: "==",
@@ -43,7 +43,7 @@ describe BooleanDsl::Parser do
   context 'operators' do
     context 'comparison' do
       specify do
-        expect(parser.parse('1 == 1')).to eq(
+        expect(parser.parse_with_debug('1 == 1')).to eq(
           left: { integer: "1" },
           comparison_operator: "==",
           right: { integer: "1" }
@@ -51,7 +51,7 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse('16 == 9565  ')).to eq(
+        expect(parser.parse_with_debug('16 == 9565  ')).to eq(
           left: { integer: "16" },
           comparison_operator: "==",
           right: { integer: "9565" }
@@ -59,7 +59,15 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse("575 == '575'")).to eq(
+        expect(parser.parse_with_debug('gamma == 7  ')).to eq(
+          left: { attribute: "gamma" },
+          comparison_operator: "==",
+          right: { integer: "7" }
+        )
+      end
+
+      specify do
+        expect(parser.parse_with_debug("575 == '575'")).to eq(
           left: { integer: "575" },
           comparison_operator: "==",
           right: { string: "575" }
@@ -67,9 +75,17 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse('16 < 9565  ')).to eq(
+        expect(parser.parse_with_debug('16 < 9565  ')).to eq(
           left: { integer: "16" },
           comparison_operator: "<",
+          right: { integer: "9565" }
+        )
+      end
+
+      specify do
+        expect(parser.parse_with_debug('16 != 9565  ')).to eq(
+          left: { integer: "16" },
+          comparison_operator: "!=",
           right: { integer: "9565" }
         )
       end
@@ -77,7 +93,7 @@ describe BooleanDsl::Parser do
 
     context 'boolean' do
       specify do
-        expect(parser.parse('1 == 1 && 2 == 2   ')).to eq(
+        expect(parser.parse_with_debug('1 == 1 && 2 == 2   ')).to eq(
           left: {
             left: { integer: "1" },
             comparison_operator: "==",
@@ -93,7 +109,7 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse('1 > 0 || alpha ')).to eq(
+        expect(parser.parse_with_debug('1 > 0 || alpha ')).to eq(
           left: {
             left: { integer: "1" },
             comparison_operator: ">",
@@ -107,7 +123,7 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse('1 < 2 && 6 == 2 && 8 > 3')).to eq(
+        expect(parser.parse_with_debug('1 < 2 && 6 == 2 && 8 > 3')).to eq(
           left: {
             left: { integer: "1" },
             comparison_operator: "<",
@@ -131,7 +147,7 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse('(1 < 2 || 6 == 2) && 8 > 3')).to eq(
+        expect(parser.parse_with_debug('(1 < 2 || 6 == 2) && 8 > 3')).to eq(
           left: {
             expression: {
               left: {
