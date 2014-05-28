@@ -1,0 +1,59 @@
+{
+  "RSpec": {
+    "coverage": {
+      "/home/bloopletech/work/boolean_dsl/lib/boolean_dsl.rb": [
+        1,
+        null,
+        1,
+        null,
+        null,
+        1,
+        1
+      ],
+      "/home/bloopletech/work/boolean_dsl/lib/boolean_dsl/parser.rb": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        1,
+        null,
+        15,
+        15,
+        null,
+        null,
+        16,
+        null,
+        7,
+        8,
+        null,
+        2,
+        null,
+        null,
+        16,
+        null,
+        null,
+        1,
+        15,
+        null,
+        16,
+        null,
+        null,
+        null,
+        16,
+        null,
+        1,
+        null,
+        null
+      ]
+    },
+    "timestamp": 1401236415
+  }
+}
