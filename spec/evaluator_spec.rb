@@ -36,12 +36,6 @@ describe BooleanDsl::Evaluator do
     specify { expect(evaluator.evaluate_boolean(false, '||', false)).to be_false }
   end
 
-  def to_context(hash = {})
-    context = double
-    hash.each_pair { |key, value| context.stub(key) { value } }
-    context
-  end
-
   context '#evaluate' do
     let(:evaluator) { described_class.new(nil, nil) }
 
@@ -49,17 +43,16 @@ describe BooleanDsl::Evaluator do
     specify { expect(evaluator.evaluate(string: 'alpha5')).to eq('alpha5') }
 
     context 'attribute' do
-      let(:hash) do
+      let(:context) do
         {
           alpha: 'omega',
           gamma: 7,
           delta: true,
-          yotta: false,
-          beta: nil
+          yotta: false
         }
       end
 
-      let(:evaluator) { described_class.new(nil, to_context(hash)) }
+      let(:evaluator) { described_class.new(nil, context) }
 
       specify { expect(evaluator.evaluate(attribute: 'alpha')).to eq('omega') }
       specify { expect(evaluator.evaluate(attribute: 'gamma')).to eq(7) }
@@ -167,8 +160,8 @@ describe BooleanDsl::Evaluator do
   context ''
 
   context 'full parse' do
-    def outcome_for(expression, context_hash = {})
-      described_class.new(expression, to_context(context_hash)).outcome
+    def outcome_for(expression, context = {})
+      described_class.new(expression, context).outcome
     end
 
     specify { expect(outcome_for('1 == 1')).to be_true }

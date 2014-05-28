@@ -21,7 +21,7 @@ class BooleanDsl::Evaluator
     elsif tree.key?(:expression)
       evaluate(tree[:expression])
     elsif tree.key?(:attribute)
-      context.send(tree[:attribute])
+      context[tree[:attribute].to_sym]
     elsif tree.key?(:string)
       tree[:string]
     elsif tree.key?(:integer)
