@@ -25,15 +25,21 @@ describe BooleanDsl::Evaluator do
   context '#evaluate_boolean' do
     let(:evaluator) { described_class.new(nil, nil) }
 
-    specify { expect(evaluator.evaluate_boolean(true, '&&', true)).to be_true }
-    specify { expect(evaluator.evaluate_boolean(true, '&&', false)).to be_false }
-    specify { expect(evaluator.evaluate_boolean(false, '&&', true)).to be_false }
-    specify { expect(evaluator.evaluate_boolean(false, '&&', false)).to be_false }
+    specify { expect(evaluator.evaluate_boolean(true, 'and', true)).to be_true }
+    specify { expect(evaluator.evaluate_boolean(true, 'and', false)).to be_false }
+    specify { expect(evaluator.evaluate_boolean(false, 'and', true)).to be_false }
+    specify { expect(evaluator.evaluate_boolean(false, 'and', false)).to be_false }
 
-    specify { expect(evaluator.evaluate_boolean(true, '||', true)).to be_true }
-    specify { expect(evaluator.evaluate_boolean(true, '||', false)).to be_true }
-    specify { expect(evaluator.evaluate_boolean(false, '||', true)).to be_true }
-    specify { expect(evaluator.evaluate_boolean(false, '||', false)).to be_false }
+    specify { expect(evaluator.evaluate_boolean(true, 'or', true)).to be_true }
+    specify { expect(evaluator.evaluate_boolean(true, 'or', false)).to be_true }
+    specify { expect(evaluator.evaluate_boolean(false, 'or', true)).to be_true }
+    specify { expect(evaluator.evaluate_boolean(false, 'or', false)).to be_false }
+  end
+
+  def to_context(hash = {})
+    context = double
+    hash.each_pair { |key, value| context.stub(key) { value } }
+    context
   end
 
   context '#evaluate' do
@@ -43,7 +49,7 @@ describe BooleanDsl::Evaluator do
     specify { expect(evaluator.evaluate(string: 'alpha5')).to eq('alpha5') }
 
     context 'attribute' do
-      let(:context) do
+      let(:context_hash) do
         {
           alpha: 'omega',
           gamma: 7,
@@ -52,7 +58,7 @@ describe BooleanDsl::Evaluator do
         }
       end
 
-      let(:evaluator) { described_class.new(nil, context) }
+      let(:evaluator) { described_class.new(nil, to_context(context_hash)) }
 
       specify { expect(evaluator.evaluate(attribute: 'alpha')).to eq('omega') }
       specify { expect(evaluator.evaluate(attribute: 'gamma')).to eq(7) }
@@ -82,7 +88,7 @@ describe BooleanDsl::Evaluator do
           comparison_operator: '==',
           right: { integer: '1' },
         },
-        boolean_operator: '&&',
+        boolean_operator: 'and',
         right: {
           left: { integer: '1' },
           comparison_operator: '==',
@@ -97,7 +103,7 @@ describe BooleanDsl::Evaluator do
           comparison_operator: '==',
           right: { integer: '7' },
         },
-        boolean_operator: '&&',
+        boolean_operator: 'and',
         right: {
           left: { integer: '1' },
           comparison_operator: '==',
@@ -112,7 +118,7 @@ describe BooleanDsl::Evaluator do
           comparison_operator: '==',
           right: { integer: '9' },
         },
-        boolean_operator: '||',
+        boolean_operator: 'or',
         right: {
           left: { integer: '1' },
           comparison_operator: '==',
@@ -127,7 +133,7 @@ describe BooleanDsl::Evaluator do
           comparison_operator: '==',
           right: { integer: '9' },
         },
-        boolean_operator: '||',
+        boolean_operator: 'or',
         right: {
           left: { integer: '7' },
           comparison_operator: '==',
@@ -160,13 +166,13 @@ describe BooleanDsl::Evaluator do
   context ''
 
   context 'full parse' do
-    def outcome_for(expression, context = {})
-      described_class.new(expression, context).outcome
+    def outcome_for(expression, context_hash = {})
+      described_class.new(expression, to_context(context_hash)).outcome
     end
 
     specify { expect(outcome_for('1 == 1')).to be_true }
     specify { expect(outcome_for('1 == 0')).to be_false }
-    specify { expect(outcome_for("(1 < 4 || 5 < 4) && (1 == 1 && 'alpha' == 'alpha')")).to be_true }
+    specify { expect(outcome_for("(1 < 4 or 5 < 4) and (1 == 1 and 'alpha' == 'alpha')")).to be_true }
     specify { expect(outcome_for('gamma == 7', { gamma: 7 })).to be_true }
     specify { expect(outcome_for('gamma == 8', { gamma: 7 })).to be_false }
     specify { expect(outcome_for("alpha == 'beta'", { alpha: 'beta' })).to be_true }

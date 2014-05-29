@@ -21,7 +21,11 @@ class BooleanDsl::Evaluator
     elsif tree.key?(:expression)
       evaluate(tree[:expression])
     elsif tree.key?(:attribute)
-      context[tree[:attribute].to_sym]
+      if context.respond_to?(tree[:attribute])
+        context.send(tree[:attribute])
+      else
+        nil #TODO: Error reporting!
+      end
     elsif tree.key?(:string)
       tree[:string]
     elsif tree.key?(:integer)
@@ -60,9 +64,9 @@ class BooleanDsl::Evaluator
   # @return [boolean]
   def evaluate_boolean(left, operator, right)
     case operator
-    when '&&'
+    when 'and'
       left && right
-    when '||'
+    when 'or'
       left || right
     end
   end

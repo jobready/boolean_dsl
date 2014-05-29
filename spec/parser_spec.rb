@@ -93,13 +93,13 @@ describe BooleanDsl::Parser do
 
     context 'boolean' do
       specify do
-        expect(parser.parse_with_debug('1 == 1 && 2 == 2   ')).to eq(
+        expect(parser.parse_with_debug('1 == 1 and 2 == 2   ')).to eq(
           left: {
             left: { integer: "1" },
             comparison_operator: "==",
             right: { integer: "1" }
           },
-          boolean_operator: "&&",
+          boolean_operator: "and",
           right: {
             left: { integer: "2" },
             comparison_operator: "==",
@@ -109,13 +109,13 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse_with_debug('1 > 0 || alpha ')).to eq(
+        expect(parser.parse_with_debug('1 > 0 or alpha ')).to eq(
           left: {
             left: { integer: "1" },
             comparison_operator: ">",
             right: { integer: "0" }
           },
-          boolean_operator: "||",
+          boolean_operator: "or",
           right: {
             attribute: "alpha"
           }
@@ -123,20 +123,20 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse_with_debug('1 < 2 && 6 == 2 && 8 > 3')).to eq(
+        expect(parser.parse_with_debug('1 < 2 and 6 == 2 and 8 > 3')).to eq(
           left: {
             left: { integer: "1" },
             comparison_operator: "<",
             right: { integer: "2" }
           },
-          boolean_operator: "&&",
+          boolean_operator: "and",
           right: {
             left: {
               left: { integer: "6" },
               comparison_operator: "==",
               right: { integer: "2" }
             },
-            boolean_operator: "&&",
+            boolean_operator: "and",
             right: {
               left: { integer: "8" },
               comparison_operator: ">",
@@ -147,7 +147,7 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse_with_debug('(1 < 2 || 6 == 2) && 8 > 3')).to eq(
+        expect(parser.parse_with_debug('(1 < 2 or 6 == 2) and 8 > 3')).to eq(
           left: {
             expression: {
               left: {
@@ -155,7 +155,7 @@ describe BooleanDsl::Parser do
                 comparison_operator: "<",
                 right: { integer: "2" }
               },
-              boolean_operator: "||",
+              boolean_operator: "or",
               right: {
                 left: { integer: "6" },
                 comparison_operator: "==",
@@ -163,7 +163,7 @@ describe BooleanDsl::Parser do
               }
             }
           },
-          boolean_operator: "&&",
+          boolean_operator: "and",
           right: {
             left: { integer: "8" },
             comparison_operator: ">",

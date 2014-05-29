@@ -25,14 +25,12 @@ class BooleanDsl::Parser < Parslet::Parser
   rule(:value_comparison) { element.as(:left) >> comparison_operator >> element.as(:right) >> space? }
 
   # Operators (Boolean)
-  rule(:boolean_operator) { (str('&&') | str('||')).as(:boolean_operator) >> space? }
+  rule(:boolean_operator) { (str('and') | str('or')).as(:boolean_operator) >> space? }
   rule(:boolean_comparison) { boolean_sub.as(:left) >> boolean_operator >> expression.as(:right) >> space? }
 
   rule(:parens) { str('(') >> expression.maybe.as(:expression) >> space? >> str(')') >> space? }
 
-
   rule(:expression) { boolean_comparison | parens | value_comparison | element }
-
   root(:expression)
 end
 
