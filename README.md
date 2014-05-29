@@ -24,7 +24,7 @@ Or install it yourself as:
 ```ruby
 require 'boolean_dsl'
 
-context = {alpha: 1}
+context = Context.new
 script = "(1 < 4 or 5 < 4) and (1 == 1 and alpha == 1)"
 BooleanDsl::Evaluator.new(script, context).outcome
 
