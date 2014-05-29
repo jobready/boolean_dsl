@@ -1,5 +1,8 @@
 # Boolean DSL
 
+[![Code Climate](https://codeclimate.com/github/jobready/boolean_dsl.png)](https://codeclimate.com/github/jobready/boolean_dsl)
+[![Build Status](https://travis-ci.org/jobready/boolean_dsl.svg)](https://travis-ci.org/jobready/boolean_dsl)
+
 Boolean DSL is a simple boolean language for creating business rules
 
 ## Installation
