@@ -24,7 +24,7 @@ class BooleanDsl::Evaluator
       if context.respond_to?(tree[:attribute])
         context.send(tree[:attribute])
       else
-        nil #TODO: Error reporting!
+        raise BooleanDsl::EvaluationFailed.new("Context does not respond to #{tree[:attribute]}")
       end
     elsif tree.key?(:string)
       tree[:string]
