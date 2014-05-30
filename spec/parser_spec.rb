@@ -83,6 +83,14 @@ describe BooleanDsl::Parser do
       end
 
       specify do
+        expect(parser.parse_with_debug('16 >= 9565  ')).to eq(
+          left: { integer: "16" },
+          comparison_operator: ">=",
+          right: { integer: "9565" }
+        )
+      end
+
+      specify do
         expect(parser.parse_with_debug('16 != 9565  ')).to eq(
           left: { integer: "16" },
           comparison_operator: "!=",

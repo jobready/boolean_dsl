@@ -20,7 +20,7 @@ class BooleanDsl::Parser < Parslet::Parser
 
   # Operators (Comparison)
   rule(:comparison_operator) do
-    (str('==') | str('!=') | str('<') | str('<=') | str('>') | str('>=')).as(:comparison_operator) >> space?
+    (str('==') | str('!=') | str('<=') | str('>=') | str('<') | str('>')).as(:comparison_operator) >> space?
   end
   rule(:value_comparison) { element.as(:left) >> comparison_operator >> element.as(:right) >> space? }
 
