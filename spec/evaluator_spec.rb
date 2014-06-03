@@ -48,7 +48,7 @@ describe BooleanDsl::Evaluator do
     specify { expect(evaluator.evaluate(integer: '57')).to eq(57) }
     specify { expect(evaluator.evaluate(string: 'alpha5')).to eq('alpha5') }
 
-    context 'attribute' do
+    context 'with context' do
       let(:context_hash) do
         {
           alpha: 'omega',
@@ -60,13 +60,20 @@ describe BooleanDsl::Evaluator do
 
       let(:evaluator) { described_class.new(nil, to_context(context_hash)) }
 
-      specify { expect(evaluator.evaluate(attribute: 'alpha')).to eq('omega') }
-      specify { expect(evaluator.evaluate(attribute: 'gamma')).to eq(7) }
-      specify { expect(evaluator.evaluate(attribute: 'delta')).to be_true }
-      specify { expect(evaluator.evaluate(attribute: 'yotta')).to be_false }
-      specify do
-        expect { evaluator.evaluate(attribute: 'beta') }.to(
-          raise_error(BooleanDsl::EvaluationFailed, 'Context does not respond to beta'))
+      context 'attribute' do
+        specify { expect(evaluator.evaluate(attribute: 'alpha')).to eq('omega') }
+        specify { expect(evaluator.evaluate(attribute: 'gamma')).to eq(7) }
+        specify { expect(evaluator.evaluate(attribute: 'delta')).to be_true }
+        specify { expect(evaluator.evaluate(attribute: 'yotta')).to be_false }
+        specify do
+          expect { evaluator.evaluate(attribute: 'beta') }.to(
+            raise_error(BooleanDsl::EvaluationFailed, 'Context does not respond to beta'))
+        end
+      end
+
+      context 'negation' do
+        specify { expect(evaluator.evaluate(negation: { attribute: 'alpha' })).to eq(false) }
+        specify { expect(evaluator.evaluate(negation: { attribute: 'yotta' })).to eq(true) }
       end
     end
 
@@ -165,8 +172,6 @@ describe BooleanDsl::Evaluator do
       )).to be_false
     end
   end
-
-  context ''
 
   context 'full parse' do
     def outcome_for(expression, context_hash = {})

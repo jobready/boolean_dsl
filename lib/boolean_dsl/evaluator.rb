@@ -26,6 +26,8 @@ class BooleanDsl::Evaluator
       else
         raise BooleanDsl::EvaluationFailed.new("Context does not respond to #{tree[:attribute]}")
       end
+    elsif tree.key?(:negation)
+      !evaluate(tree[:negation])
     elsif tree.key?(:string)
       tree[:string]
     elsif tree.key?(:integer)
