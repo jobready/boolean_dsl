@@ -9,7 +9,9 @@ class BooleanDsl::Parser < Parslet::Parser
   rule(:string_content) { (str("'").absent? >> any).repeat }
   rule(:string) { str("'") >> string_content.as(:string) >> str("'") >> space? }
 
-  rule(:attribute) { (match('[A-Za-z_]') >> match('[A-Za-z_0-9]').repeat).as(:attribute) >> space? }
+  rule(:attribute) do
+    (match('[A-Za-z_]') >> match('[A-Za-z_0-9]').repeat >> str('?').maybe).as(:attribute) >> space?
+  end
 
   # Elements
   rule(:element) { integer | string | attribute }
