@@ -41,6 +41,42 @@ describe BooleanDsl::Parser do
     end
   end
 
+  context 'negation' do
+    specify { expect(parser.parse_with_debug('!cert?')).to eq(negation: { attribute: "cert?" }) }
+
+    specify do
+      expect(parser.parse_with_debug('1 < 2 and 6 == !omega and !alpha > 3')).to eq(
+        left: {
+          left: { integer: "1" },
+          comparison_operator: "<",
+          right: { integer: "2" }
+        },
+        boolean_operator: "and",
+        right: {
+          left: {
+            left: { integer: "6" },
+            comparison_operator: "==",
+            right: {
+              negation: {
+                attribute: "omega"
+              }
+            }
+          },
+          boolean_operator: "and",
+          right: {
+            left: {
+              negation: {
+                attribute: "alpha"
+              }
+            },
+            comparison_operator: ">",
+            right: { integer: "3" }
+          }
+        }
+      )
+    end
+  end
+
   context 'operators' do
     context 'comparison' do
       specify do
