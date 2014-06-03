@@ -23,6 +23,7 @@ describe BooleanDsl::Parser do
     specify { expect(parser.parse_with_debug("first_name")).to eq(attribute: 'first_name') }
     specify { expect(parser.parse_with_debug("aqf3_cert")).to eq(attribute: 'aqf3_cert') }
     specify { expect(parser.parse_with_debug("cert_3")).to eq(attribute: 'cert_3') }
+    specify { expect(parser.parse_with_debug("dare21_?")).to eq(attribute: 'dare21_?') }
   end
 
   context 'parens' do
