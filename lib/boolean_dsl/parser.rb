@@ -13,8 +13,11 @@ class BooleanDsl::Parser < Parslet::Parser
     (match('[A-Za-z_]') >> match('[A-Za-z_0-9]').repeat >> str('?').maybe).as(:attribute) >> space?
   end
 
+  # Negation
+  rule(:negation) { str('!') >> attribute.as(:negation) }
+
   # Elements
-  rule(:element) { integer | string | attribute }
+  rule(:element) { negation | integer | string | attribute }
 
   # Booleans are rules that will evaluate to a true or false result
   rule(:boolean) { value_comparison | attribute }
