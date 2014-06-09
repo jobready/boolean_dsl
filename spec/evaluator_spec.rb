@@ -37,7 +37,7 @@ describe BooleanDsl::Evaluator do
   end
 
   def to_context(hash = {})
-    context = double
+    context = double(BooleanDsl::Context)
     hash.each_pair { |key, value| context.stub(key) { value } }
     context
   end
@@ -69,11 +69,6 @@ describe BooleanDsl::Evaluator do
           expect { evaluator.evaluate(attribute: 'beta') }.to(
             raise_error(BooleanDsl::EvaluationFailed, 'Context does not respond to beta'))
         end
-      end
-
-      context 'negation' do
-        specify { expect(evaluator.evaluate(negation: { attribute: 'alpha' })).to eq(false) }
-        specify { expect(evaluator.evaluate(negation: { attribute: 'yotta' })).to eq(true) }
       end
     end
 
