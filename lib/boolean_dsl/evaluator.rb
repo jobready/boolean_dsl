@@ -1,4 +1,6 @@
 class BooleanDsl::Evaluator
+  class InvalidContext < Exception; end
+
   attr_reader :parser, :expression, :context
 
   def initialize(expression, context)
@@ -8,6 +10,8 @@ class BooleanDsl::Evaluator
   end
 
   def outcome
+    verify_context!
+
     tree = parser.parse(expression)
 
     evaluate(tree)
@@ -70,6 +74,14 @@ class BooleanDsl::Evaluator
       left && right
     when 'or'
       left || right
+    end
+  end
+
+  private
+
+  def verify_context!
+    unless context.kind_of? BooleanDsl::Context
+      fail InvalidContext, "Context must be instance of BooleanDsl::Context"
     end
   end
 end

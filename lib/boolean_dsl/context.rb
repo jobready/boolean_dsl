@@ -1,0 +1,3 @@
+
+class BooleanDsl::Context
+end
