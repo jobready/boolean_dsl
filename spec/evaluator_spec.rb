@@ -25,6 +25,11 @@ describe BooleanDsl::Evaluator do
   context '#evaluate_boolean' do
     let(:evaluator) { described_class.new(nil, nil) }
 
+    before do
+      allow(evaluator).to receive(:evaluate).with(true).and_return(true)
+      allow(evaluator).to receive(:evaluate).with(false).and_return(false)
+    end
+
     specify { expect(evaluator.evaluate_boolean(true, 'and', true)).to be_true }
     specify { expect(evaluator.evaluate_boolean(true, 'and', false)).to be_false }
     specify { expect(evaluator.evaluate_boolean(false, 'and', true)).to be_false }
@@ -42,142 +47,10 @@ describe BooleanDsl::Evaluator do
     context
   end
 
-  context '#evaluate' do
-    let(:evaluator) { described_class.new(nil, nil) }
-
-    specify { expect(evaluator.evaluate(integer: '57')).to eq(57) }
-    specify { expect(evaluator.evaluate(string: 'alpha5')).to eq('alpha5') }
-
-    context 'with context' do
-      let(:context_hash) do
-        {
-          alpha: 'omega',
-          gamma: 7,
-          delta: true,
-          yotta: false
-        }
-      end
-
-      let(:evaluator) { described_class.new(nil, to_context(context_hash)) }
-
-      context 'attribute' do
-        specify { expect(evaluator.evaluate(attribute: 'alpha')).to eq('omega') }
-        specify { expect(evaluator.evaluate(attribute: 'gamma')).to eq(7) }
-        specify { expect(evaluator.evaluate(attribute: 'delta')).to be_true }
-        specify { expect(evaluator.evaluate(attribute: 'yotta')).to be_false }
-        specify do
-          expect { evaluator.evaluate(attribute: 'beta') }.to(
-            raise_error(BooleanDsl::EvaluationFailed, 'Context does not respond to beta'))
-        end
-      end
-
-      context 'negation' do
-        specify { expect(evaluator.evaluate(negation: { attribute: 'alpha' })).to eq(false) }
-        specify { expect(evaluator.evaluate(negation: { attribute: 'yotta' })).to eq(true) }
-      end
-    end
-
-    specify do
-      expect(evaluator.evaluate(
-        left: { integer: '1' },
-        comparison_operator: '==',
-        right: { integer: '1' },
-      )).to be_true
-    end
-    specify do
-      expect(evaluator.evaluate(
-        left: { integer: '1' },
-        comparison_operator: '<',
-        right: { integer: '1' },
-      )).to be_false
-    end
-    specify do
-      expect(evaluator.evaluate(
-        left: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '1' },
-        },
-        boolean_operator: 'and',
-        right: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '1' },
-        }
-      )).to be_true
-    end
-    specify do
-      expect(evaluator.evaluate(
-        left: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '7' },
-        },
-        boolean_operator: 'and',
-        right: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '1' },
-        }
-      )).to be_false
-    end
-    specify do
-      expect(evaluator.evaluate(
-        left: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '9' },
-        },
-        boolean_operator: 'or',
-        right: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '1' },
-        }
-      )).to be_true
-    end
-    specify do
-      expect(evaluator.evaluate(
-        left: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '9' },
-        },
-        boolean_operator: 'or',
-        right: {
-          left: { integer: '7' },
-          comparison_operator: '==',
-          right: { integer: '2' },
-        }
-      )).to be_false
-    end
-
-    specify do
-      expect(evaluator.evaluate(
-        expression: {
-          left: { integer: '1' },
-          comparison_operator: '==',
-          right: { integer: '1' }
-        }
-      )).to be_true
-    end
-
-    specify do
-      expect(evaluator.evaluate(
-        expression: {
-          left: { integer: '1' },
-          comparison_operator: '!=',
-          right: { integer: '1' }
-        }
-      )).to be_false
-    end
-  end
-
   context 'full parse' do
     def outcome_for(expression, context_hash = {})
       described_class.new(expression, to_context(context_hash)).outcome
     end
-
     specify { expect(outcome_for('1 == 1')).to be_true }
     specify { expect(outcome_for('1 == 0')).to be_false }
     specify { expect(outcome_for("(1 < 4 or 5 < 4) and (1 == 1 and 'alpha' == 'alpha')")).to be_true }
