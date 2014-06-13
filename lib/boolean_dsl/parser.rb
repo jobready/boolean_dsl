@@ -20,7 +20,7 @@ class BooleanDsl::Parser < Parslet::Parser
   rule(:element) { negation | integer | string | attribute }
 
   # Booleans are rules that will evaluate to a true or false result
-  rule(:boolean) { value_comparison | attribute }
+  rule(:boolean) { value_comparison | negation | attribute }
   rule(:boolean_sub) { parens | boolean }
 
   # Operators (Comparison)
