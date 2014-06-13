@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    boolean_dsl (1.1.0)
+    boolean_dsl (1.2.0)
       activesupport
       parslet
 
