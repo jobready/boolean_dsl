@@ -48,7 +48,7 @@ Our DSL consists of these components:
       'alpha'
       'What is your name?'
 
-* **integer**, a sequency of 0-9. Examples:
+* **integer**, a sequence of 0-9. Examples:
 
       0
       458457474
