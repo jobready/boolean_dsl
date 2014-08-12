@@ -21,10 +21,10 @@ class BooleanDsl::Evaluator
     elsif tree.key?(:expression)
       evaluate(tree[:expression])
     elsif tree.key?(:attribute)
-      if context.respond_to?(tree[:attribute])
-        context.send(tree[:attribute])
+      if context.key?(tree[:attribute].to_s)
+        context[tree[:attribute].to_s]
       else
-        raise BooleanDsl::EvaluationFailed.new("Context does not respond to #{tree[:attribute]}")
+        raise BooleanDsl::EvaluationFailed.new("Context does not have key #{tree[:attribute]}")
       end
     elsif tree.key?(:negation)
       !evaluate(tree[:negation])
