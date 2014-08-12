@@ -41,23 +41,17 @@ describe BooleanDsl::Evaluator do
     specify { expect(evaluator.evaluate_boolean(false, 'or', false)).to be_false }
   end
 
-  def to_context(hash = {})
-    context = double
-    hash.each_pair { |key, value| context.stub(key) { value } }
-    context
-  end
-
   context 'full parse' do
     def outcome_for(expression, context_hash = {})
-      described_class.new(expression, to_context(context_hash)).outcome
+      described_class.new(expression, context_hash).outcome
     end
     specify { expect(outcome_for('1 == 1')).to be_true }
     specify { expect(outcome_for('1 == 0')).to be_false }
     specify { expect(outcome_for("(1 < 4 or 5 < 4) and (1 == 1 and 'alpha' == 'alpha')")).to be_true }
-    specify { expect(outcome_for('gamma == 7', { gamma: 7 })).to be_true }
-    specify { expect(outcome_for('gamma == 8', { gamma: 7 })).to be_false }
-    specify { expect(outcome_for("alpha == 'beta'", { alpha: 'beta' })).to be_true }
-    specify { expect(outcome_for("alpha == 'beta'", { alpha: 'delta' })).to be_false }
+    specify { expect(outcome_for('gamma == 7', { 'gamma' => 7 })).to be_true }
+    specify { expect(outcome_for('gamma == 8', { 'gamma' => 7 })).to be_false }
+    specify { expect(outcome_for("alpha == 'beta'", { 'alpha' => 'beta' })).to be_true }
+    specify { expect(outcome_for("alpha == 'beta'", { 'alpha' => 'delta' })).to be_false }
   end
 end
 
