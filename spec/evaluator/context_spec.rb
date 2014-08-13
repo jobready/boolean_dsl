@@ -1,25 +1,15 @@
 require 'spec_helper'
 
 describe 'BooleanDsl::Evaluator#evaluate with context' do
-  class Context
-    def alpha
-      'omega'
-    end
-
-    def gamma
-      7
-    end
-
-    def delta
-      true
-    end
-
-    def yotta
-      false
-    end
+  let(:context) do
+    {
+      'alpha' => 'omega',
+      'gamma' => 7,
+      'delta' => true,
+      'yotta' => false
+    }
   end
 
-  let(:context) { Context.new }
   let(:evaluator) { BooleanDsl::Evaluator.new(nil, context) }
 
   context 'attribute' do
@@ -29,7 +19,7 @@ describe 'BooleanDsl::Evaluator#evaluate with context' do
     specify { expect(evaluator.evaluate(attribute: 'yotta')).to be_false }
     specify do
       expect { evaluator.evaluate(attribute: 'beta') }.to(
-        raise_error(BooleanDsl::EvaluationFailed, 'Context does not respond to beta'))
+        raise_error(BooleanDsl::EvaluationFailed, 'Context does not have key beta'))
     end
   end
 
