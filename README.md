@@ -1,7 +1,8 @@
 # Boolean DSL
 
 [![Code Climate](https://codeclimate.com/github/jobready/boolean_dsl.png)](https://codeclimate.com/github/jobready/boolean_dsl)
-[![Build Status](https://travis-ci.org/jobready/boolean_dsl.svg)](https://travis-ci.org/jobready/boolean_dsl)
+[![Test Coverage](https://codeclimate.com/github/jobready/boolean_dsl/badges/coverage.svg)](https://codeclimate.com/github/jobready/boolean_dsl)
+[![Build status](https://badge.buildbox.io/adb8860e18e1f4c6e45f7744dffcc99c4fc1a44fc355a9bc24.svg)](https://buildbox.io/accounts/jobready/projects/boolean-dsl)
 
 Boolean DSL is a simple boolean language for creating business rules
 
