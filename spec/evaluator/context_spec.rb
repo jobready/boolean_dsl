@@ -15,8 +15,8 @@ describe 'BooleanDsl::Evaluator#evaluate with context' do
   context 'attribute' do
     specify { expect(evaluator.evaluate(attribute: 'alpha')).to eq('omega') }
     specify { expect(evaluator.evaluate(attribute: 'gamma')).to eq(7) }
-    specify { expect(evaluator.evaluate(attribute: 'delta')).to be_true }
-    specify { expect(evaluator.evaluate(attribute: 'yotta')).to be_false }
+    specify { expect(evaluator.evaluate(attribute: 'delta')).to be_truthy }
+    specify { expect(evaluator.evaluate(attribute: 'yotta')).to be_falsey }
     specify do
       expect { evaluator.evaluate(attribute: 'beta') }.to(
         raise_error(BooleanDsl::EvaluationFailed, 'Context does not have key beta'))
