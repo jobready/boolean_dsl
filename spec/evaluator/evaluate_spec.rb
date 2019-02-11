@@ -16,6 +16,14 @@ describe 'BooleanDsl::Evaluator#evaluate' do
 
   specify do
     expect(evaluator.evaluate(
+      left: { decimal: '1.1' },
+      comparison_operator: '>',
+      right: { decimal: '1.0' },
+    )).to be_truthy
+  end
+
+  specify do
+    expect(evaluator.evaluate(
       left: { integer: '1' },
       comparison_operator: '<',
       right: { integer: '1' },
