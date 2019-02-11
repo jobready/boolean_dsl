@@ -9,6 +9,16 @@ describe BooleanDsl::Parser do
     specify { expect(parser.parse_with_debug('12')).to eq(integer: "12") }
     specify { expect(parser.parse_with_debug('0 ')).to eq(integer: "0") }
     specify { expect(parser.parse_with_debug('12   ')).to eq(integer: "12") }
+    specify { expect(parser.parse_with_debug('-12')).to eq(integer: "-12") }
+    specify { expect(parser.parse_with_debug('+12')).to eq(integer: "+12") }
+  end
+
+  context 'decimal literals' do
+    specify { expect(parser.parse_with_debug('0.00')).to eq(decimal: "0.00") }
+    specify { expect(parser.parse_with_debug('1.23')).to eq(decimal: "1.23") }
+    specify { expect(parser.parse_with_debug('1.23  ')).to eq(decimal: "1.23") }
+    specify { expect(parser.parse_with_debug('-1.23')).to eq(decimal: "-1.23") }
+    specify { expect(parser.parse_with_debug('+1.23')).to eq(decimal: "+1.23") }
   end
 
   context 'string literals' do
@@ -128,10 +138,10 @@ describe BooleanDsl::Parser do
       end
 
       specify do
-        expect(parser.parse_with_debug('16 < 9565  ')).to eq(
-          left: { integer: "16" },
+        expect(parser.parse_with_debug('16.5 < 9565.8  ')).to eq(
+          left: { decimal: "16.5" },
           comparison_operator: "<",
-          right: { integer: "9565" }
+          right: { decimal: "9565.8" }
         )
       end
 

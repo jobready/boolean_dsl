@@ -1,3 +1,5 @@
+require 'bigdecimal'
+
 class BooleanDsl::Evaluator
   attr_reader :parser, :expression, :context
 
@@ -30,6 +32,8 @@ class BooleanDsl::Evaluator
       !evaluate(tree[:negation])
     elsif tree.key?(:string)
       tree[:string]
+    elsif tree.key?(:decimal)
+      BigDecimal(tree[:decimal])
     elsif tree.key?(:integer)
       Integer(tree[:integer], 10)
     end

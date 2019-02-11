@@ -49,9 +49,15 @@ Our DSL consists of these components:
       'alpha'
       'What is your name?'
 
-* **integer**, a sequence of 0-9. Examples:
+* **decimal**, a sequence of [+-]?[0-9]\*.[0-9]\*. Examples:
+
+      0.123
+      -45.78
+
+* **integer**, a sequence of [+-]?[0-9]\*. Examples:
 
       0
+      -654
       458457474
 
 * **attribute** reference, a sequence of [A-z\_][A-z0-9\_]\*[?]. When an attribute reference is evaluated,
@@ -66,7 +72,7 @@ Our DSL consists of these components:
       !Apple_Tree
       !what_i5_YOUR_name?
 
-* **element** is one of a **string**, **integer**, or **attribute**.
+* **element** is one of a **string**, **decimal**, **integer**, or **attribute**.
 
 * **comparison** consists of an **element**, followed by one of ==, !=, <, >, <=, >=, (the operator)
   followed by another **element**. When a comparison is evaluated, the 2 elements are compared using the operater

@@ -4,7 +4,11 @@ class BooleanDsl::Parser < Parslet::Parser
   rule(:space?) { space.maybe }
 
   # Literals
-  rule(:integer) { match('[0-9]').repeat(1).as(:integer) >> space? }
+  rule(:decimal) do
+    (match('[+-]').maybe >> match('[0-9]').repeat(1) >> str(".") >> match('[0-9]').repeat(1)).as(:decimal) >> space?
+  end
+
+  rule(:integer) { (match('[+-]').maybe >> match('[0-9]').repeat(1)).as(:integer) >> space? }
 
   rule(:string_content) { (str("'").absent? >> any).repeat }
   rule(:string) { str("'") >> string_content.as(:string) >> str("'") >> space? }
@@ -17,7 +21,7 @@ class BooleanDsl::Parser < Parslet::Parser
   rule(:negation) { str('!') >> attribute.as(:negation) }
 
   # Elements
-  rule(:element) { negation | integer | string | attribute }
+  rule(:element) { negation | decimal | integer | string | attribute }
 
   # Booleans are rules that will evaluate to a true or false result
   rule(:boolean) { value_comparison | negation | attribute }
