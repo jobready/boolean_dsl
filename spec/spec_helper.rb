@@ -1,9 +1,6 @@
 require 'simplecov'
 SimpleCov.start
 
-require "codeclimate-test-reporter"
-CodeClimate::TestReporter.start
-
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter
 ]
@@ -21,7 +18,7 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.filter_run_excluding perf: true
   config.order = 'random'
-#  config.include FactoryGirl::Syntax::Methods
+#  config.include FactoryBot::Syntax::Methods
 end
 
 require 'parslet/convenience'

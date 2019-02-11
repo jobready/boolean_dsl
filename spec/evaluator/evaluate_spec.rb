@@ -11,15 +11,15 @@ describe 'BooleanDsl::Evaluator#evaluate' do
       left: { integer: '1' },
       comparison_operator: '==',
       right: { integer: '1' },
-    )).to be_true
+    )).to be_truthy
   end
-  
+
   specify do
     expect(evaluator.evaluate(
       left: { integer: '1' },
       comparison_operator: '<',
       right: { integer: '1' },
-    )).to be_false
+    )).to be_falsey
   end
 
   specify do
@@ -35,7 +35,7 @@ describe 'BooleanDsl::Evaluator#evaluate' do
         comparison_operator: '==',
         right: { integer: '1' },
       }
-    )).to be_true
+    )).to be_truthy
   end
 
   specify do
@@ -51,7 +51,7 @@ describe 'BooleanDsl::Evaluator#evaluate' do
         comparison_operator: '==',
         right: { integer: '1' },
       }
-    )).to be_false
+    )).to be_falsey
   end
 
   specify do
@@ -67,7 +67,7 @@ describe 'BooleanDsl::Evaluator#evaluate' do
         comparison_operator: '==',
         right: { integer: '1' },
       }
-    )).to be_true
+    )).to be_truthy
   end
 
   specify do
@@ -83,7 +83,7 @@ describe 'BooleanDsl::Evaluator#evaluate' do
         comparison_operator: '==',
         right: { integer: '2' },
       }
-    )).to be_false
+    )).to be_falsey
   end
 
   specify do
@@ -93,6 +93,6 @@ describe 'BooleanDsl::Evaluator#evaluate' do
         comparison_operator: '!=',
         right: { integer: '1' }
       }
-    )).to be_false
+    )).to be_falsey
   end
 end
