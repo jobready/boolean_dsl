@@ -49,14 +49,15 @@ Our DSL consists of these components:
       'alpha'
       'What is your name?'
 
-* **decimal**, a sequence of [0-9]\*.[0-9]\*. Examples:
+* **decimal**, a sequence of [+-]?[0-9]\*.[0-9]\*. Examples:
 
       0.123
-      45.78
+      -45.78
 
-* **integer**, a sequence of 0-9. Examples:
+* **integer**, a sequence of [+-]?[0-9]\*. Examples:
 
       0
+      -654
       458457474
 
 * **attribute** reference, a sequence of [A-z\_][A-z0-9\_]\*[?]. When an attribute reference is evaluated,

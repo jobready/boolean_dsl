@@ -9,12 +9,16 @@ describe BooleanDsl::Parser do
     specify { expect(parser.parse_with_debug('12')).to eq(integer: "12") }
     specify { expect(parser.parse_with_debug('0 ')).to eq(integer: "0") }
     specify { expect(parser.parse_with_debug('12   ')).to eq(integer: "12") }
+    specify { expect(parser.parse_with_debug('-12')).to eq(integer: "-12") }
+    specify { expect(parser.parse_with_debug('+12')).to eq(integer: "+12") }
   end
 
   context 'decimal literals' do
     specify { expect(parser.parse_with_debug('0.00')).to eq(decimal: "0.00") }
     specify { expect(parser.parse_with_debug('1.23')).to eq(decimal: "1.23") }
     specify { expect(parser.parse_with_debug('1.23  ')).to eq(decimal: "1.23") }
+    specify { expect(parser.parse_with_debug('-1.23')).to eq(decimal: "-1.23") }
+    specify { expect(parser.parse_with_debug('+1.23')).to eq(decimal: "+1.23") }
   end
 
   context 'string literals' do

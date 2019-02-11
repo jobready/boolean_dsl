@@ -8,7 +8,7 @@ describe 'BooleanDsl::Evaluator#evaluate' do
 
   specify do
     expect(evaluator.evaluate(
-      left: { integer: '1' },
+      left: { integer: '+1' },
       comparison_operator: '==',
       right: { integer: '1' },
     )).to be_truthy
@@ -16,9 +16,9 @@ describe 'BooleanDsl::Evaluator#evaluate' do
 
   specify do
     expect(evaluator.evaluate(
-      left: { decimal: '1.1' },
-      comparison_operator: '>',
-      right: { decimal: '1.0' },
+      left: { decimal: '-2.1' },
+      comparison_operator: '<',
+      right: { decimal: '+1.2' },
     )).to be_truthy
   end
 
@@ -51,7 +51,7 @@ describe 'BooleanDsl::Evaluator#evaluate' do
       left: {
         left: { integer: '1' },
         comparison_operator: '==',
-        right: { integer: '7' },
+        right: { integer: '-1' },
       },
       boolean_operator: 'and',
       right: {

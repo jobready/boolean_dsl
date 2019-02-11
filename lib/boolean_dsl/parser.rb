@@ -5,10 +5,10 @@ class BooleanDsl::Parser < Parslet::Parser
 
   # Literals
   rule(:decimal) do
-    (match('[0-9]').repeat(1) >> str(".") >> match('[0-9]').repeat(1)).as(:decimal) >> space?
+    (match('[+-]').maybe >> match('[0-9]').repeat(1) >> str(".") >> match('[0-9]').repeat(1)).as(:decimal) >> space?
   end
 
-  rule(:integer) { match('[0-9]').repeat(1).as(:integer) >> space? }
+  rule(:integer) { (match('[+-]').maybe >> match('[0-9]').repeat(1)).as(:integer) >> space? }
 
   rule(:string_content) { (str("'").absent? >> any).repeat }
   rule(:string) { str("'") >> string_content.as(:string) >> str("'") >> space? }
