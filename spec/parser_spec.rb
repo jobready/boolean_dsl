@@ -3,7 +3,7 @@ require 'spec_helper'
 describe BooleanDsl::Parser do
   let(:parser) { described_class.new }
 
-  context 'numeric literals' do
+  context 'integer literals' do
     specify { expect(parser.parse_with_debug('0')).to eq(integer: "0") }
     specify { expect(parser.parse_with_debug('1')).to eq(integer: "1") }
     specify { expect(parser.parse_with_debug('12')).to eq(integer: "12") }
@@ -19,6 +19,21 @@ describe BooleanDsl::Parser do
     specify { expect(parser.parse_with_debug('1.23  ')).to eq(decimal: "1.23") }
     specify { expect(parser.parse_with_debug('-1.23')).to eq(decimal: "-1.23") }
     specify { expect(parser.parse_with_debug('+1.23')).to eq(decimal: "+1.23") }
+    specify { expect(parser.parse_with_debug('-1.23  ')).to eq(decimal: "-1.23") }
+  end
+
+  context 'percentage literals' do
+    specify { expect(parser.parse_with_debug('0%')).to eq(percentage: "0%") }
+    specify { expect(parser.parse_with_debug('12%')).to eq(percentage: "12%") }
+    specify { expect(parser.parse_with_debug('12.34%')).to eq(percentage: "12.34%") }
+    specify { expect(parser.parse_with_debug('0% ')).to eq(percentage: "0%") }
+    specify { expect(parser.parse_with_debug('12%  ')).to eq(percentage: "12%") }
+    specify { expect(parser.parse_with_debug('12.34%  ')).to eq(percentage: "12.34%") }
+    specify { expect(parser.parse_with_debug('-12%')).to eq(percentage: "-12%") }
+    specify { expect(parser.parse_with_debug('+12%')).to eq(percentage: "+12%") }
+    specify { expect(parser.parse_with_debug('-12.34%')).to eq(percentage: "-12.34%") }
+    specify { expect(parser.parse_with_debug('+12.34%')).to eq(percentage: "+12.34%") }
+    specify { expect(parser.parse_with_debug('-12.34%  ')).to eq(percentage: "-12.34%") }
   end
 
   context 'string literals' do
@@ -150,6 +165,14 @@ describe BooleanDsl::Parser do
           left: { integer: "16" },
           comparison_operator: ">=",
           right: { integer: "9565" }
+        )
+      end
+
+      specify do
+        expect(parser.parse_with_debug('25% <= 50%  ')).to eq(
+          left: { percentage: "25%" },
+          comparison_operator: "<=",
+          right: { percentage: "50%" }
         )
       end
 

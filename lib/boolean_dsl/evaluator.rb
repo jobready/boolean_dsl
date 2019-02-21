@@ -32,6 +32,8 @@ class BooleanDsl::Evaluator
       !evaluate(tree[:negation])
     elsif tree.key?(:string)
       tree[:string]
+    elsif tree.key?(:percentage)
+      BigDecimal(tree[:percentage].to_s.chop) / 100
     elsif tree.key?(:decimal)
       BigDecimal(tree[:decimal])
     elsif tree.key?(:integer)

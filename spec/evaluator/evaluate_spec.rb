@@ -16,6 +16,14 @@ describe 'BooleanDsl::Evaluator#evaluate' do
 
   specify do
     expect(evaluator.evaluate(
+      left: { percentage: '-14.5%' },
+      comparison_operator: '<',
+      right: { percentage: '+5%' },
+    )).to be_truthy
+  end
+
+  specify do
+    expect(evaluator.evaluate(
       left: { decimal: '-2.1' },
       comparison_operator: '<',
       right: { decimal: '+1.2' },
