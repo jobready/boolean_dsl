@@ -52,6 +52,7 @@ describe BooleanDsl::Evaluator do
     specify { expect(outcome_for('gamma == 8', { 'gamma' => 7 })).to be_falsey }
     specify { expect(outcome_for("alpha == 'beta'", { 'alpha' => 'beta' })).to be_truthy }
     specify { expect(outcome_for("alpha == 'beta'", { 'alpha' => 'delta' })).to be_falsey }
+    specify { expect(outcome_for("20.5% < 50%")).to be_truthy }
   end
 end
 
